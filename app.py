@@ -68,9 +68,9 @@ classifier = load_model()
 # 🔍 Keyword Detector (with pattern matching)
 # -----------------------------
 keyword_patterns = {
-    "bitch": r"\b[b8][i1!|l][t+][c(k)][h4]\b",
-    "slut": r"\b[s5$][l1!][uü][t+]\b",
-    "whore": r"\b[wvv][h#][o0ö][r][e3]\b",
+    "bitch": r"\b[b8][i1!|l*][t+][c(k)][h4]\b",
+    "slut": r"\b[s5$][l1!][uü*][t+]\b",
+    "whore": r"\b[wvv][h#][o0ö*][r][e3]\b",
     "gay is wrong": r"g[a@4]y\s+is\s+wrong"
 }
 
@@ -111,7 +111,6 @@ if st.session_state.last_message_html:
 # Input Form
 # -----------------------------
 with st.form(key="chat_form"):
-    st.markdown("**You:**")
     user_input = st.text_input("", value="", key="user_message")
     submitted = st.form_submit_button("Send Message")
 
