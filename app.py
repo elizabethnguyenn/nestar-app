@@ -8,7 +8,7 @@ import html  # To escape user input safely
 # -----------------------------
 st.set_page_config(page_title="NESTAR Messaging Filter", layout="centered")
 
-st.title("NESTAR Hate Crime Messaging Detection System")
+st.title("NESTAR Hate Crime Detection System")
 st.caption("Microsoft Teams Simulation")
 
 # -----------------------------
@@ -154,6 +154,11 @@ with st.form(key="chat_form"):
         </div>
         """
 
-        # Save and rerun to show message above input
+        # Save message and clear input box
         st.session_state.last_message_html = message_html
+
+        # ✅ Clear the input after sending
+        st.session_state["user_message"] = ""
+
+        # Refresh the app so new message appears above input
         st.rerun()
