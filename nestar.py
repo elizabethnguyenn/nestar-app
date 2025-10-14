@@ -2,6 +2,9 @@ import streamlit as st
 from transformers import pipeline
 import re
 import html  # To escape user input safely
+import os
+os.environ['TRANSFORMERS_CACHE'] = './model_cache'
+
 
 # -----------------------------
 # App Configuration
