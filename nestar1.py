@@ -68,7 +68,7 @@ def load_model():
 classifier = load_model()
 
 # -----------------------------
-# 🔍 Keyword Detector (pattern matching)
+# Keyword Detector (pattern matching)
 # -----------------------------
 keyword_patterns = {
     "bitch": r"\b[b8][i1!|l*][t+][c(k)][h4]\b",
@@ -151,7 +151,7 @@ with st.form(key="chat_form"):
             <div class="{bubble_class}">
                 <div class="name-label">You:</div>
                 {safe_input}
-                {bubble_note}
+                <div>{bubble_note}</div>
             </div>
         </div>
         """
