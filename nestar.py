@@ -11,7 +11,7 @@ os.environ['TRANSFORMERS_CACHE'] = './model_cache'
 # -----------------------------
 st.set_page_config(page_title="NESTAR Messaging Filter", layout="centered")
 
-st.title("NESTAR Hate Crime Messaging Detection System")
+st.title("NESTAR Hate Crime Detection System")
 st.caption("Microsoft Teams Simulation")
 
 # -----------------------------
