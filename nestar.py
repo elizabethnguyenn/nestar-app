@@ -122,6 +122,9 @@ with st.form(key="chat_form"):
         bubble_class = "chat-bubble outgoing"
         bubble_note = ""
         safe_input = html.escape(user_input)  # Escape user input safely
+        st.session_state.last_message_html = "..."  # your HTML chat message
+        st.session_state.user_message = ""  # 🔄 clear input
+        st.rerun()
 
         # Keyword flagged
         if label == "toxic (keyword)":
