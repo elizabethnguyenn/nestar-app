@@ -158,5 +158,5 @@ with st.form(key="chat_form"):
 
         # Save and rerun to show message above input
         st.session_state.last_message_html = message_html
-        st.session_state.user_message = ""
+        st.session_state["user_message"] = ""
         st.rerun()
