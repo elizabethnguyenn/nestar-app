@@ -71,11 +71,13 @@ classifier = load_model()
 # Keyword Detector (pattern matching)
 # -----------------------------
 keyword_patterns = {
-    "bitch": r"\b[b8][i1!|l*][t+][c(k)][h4]\b",
-    "slut": r"\b[s5$][l1!][uü*][t+]\b",
-    "whore": r"\b[wvv][h#][o0ö*][r][e3]\b",
+    "bitch": r"\b[b8][i1!l\|][t+][c\(\)]?[h4]?\b",
+    "slut": r"\b[s5$][l1!][uü\*][t+]\b",
+    "whore": r"\b[wvv][h#][o0ö\*][r][e3]?\b",
     "gay is wrong": r"g[a@4]y\s+is\s+wrong",
-    "trans people shouldn't exist":
+    "trans people shouldn't exist": r"\btrans(?:gender)?\s+(?:people|ppl|persons|folks)\s+(?:should(?:'t| not)|don't|dont|do\s+not)\s+exist\b",
+    "tranny": r"\b[t+][r]+[a@4][n]+[yie1!]+[sz]*\b",
+    "trany": r"\b[t+][r]+[a@4][n]+[yie1!]+[sz]*\b"
 }
 
 def keyword_detector(text):
