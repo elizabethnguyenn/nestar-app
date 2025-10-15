@@ -63,7 +63,7 @@ st.markdown("""
 # -----------------------------
 @st.cache_resource
 def load_model():
-    return pipeline("text-classification", model="unitary/toxic-bert")
+    return pipeline("text-classification", model="GroNLP/hateBERT")
 
 classifier = load_model()
 
