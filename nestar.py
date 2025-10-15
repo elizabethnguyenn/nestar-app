@@ -151,7 +151,7 @@ with st.form(key="chat_form"):
             <div class="{bubble_class}">
                 <div class="name-label">You:</div>
                 {safe_input}
-                {bubble_note}
+                <div>{bubble_note}</div>
             </div>
         </div>
         """
