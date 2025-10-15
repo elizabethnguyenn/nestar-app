@@ -1,10 +1,11 @@
 import streamlit as st
 from transformers import pipeline
 import re
-import html  # To escape user input safely
+import html
 import os
-os.environ['TRANSFORMERS_CACHE'] = './model_cache'
 
+# Use a specific local folder to avoid Hugging Face permission issues
+os.environ['TRANSFORMERS_CACHE'] = './model_cache'
 
 # -----------------------------
 # App Configuration
@@ -25,7 +26,6 @@ st.markdown("""
     gap: 10px;
     margin-bottom: 20px;
 }
-
 .chat-bubble {
     padding: 10px 15px;
     border-radius: 15px;
@@ -33,22 +33,18 @@ st.markdown("""
     word-wrap: break-word;
     font-size: 16px;
 }
-
 .incoming {
     background-color: #f1f1f1;
     align-self: flex-start;
 }
-
 .outgoing {
     background-color: #e1f5fe;
     align-self: flex-end;
 }
-
 .outgoing.flagged {
     background-color: #ffebee;
     border-left: 5px solid red;
 }
-
 .name-label {
     font-weight: bold;
     font-size: 13px;
@@ -89,13 +85,15 @@ def keyword_detector(text):
         return None, None, []
 
 # -----------------------------
-# Session State
+# Session State Setup
 # -----------------------------
 if "last_message_html" not in st.session_state:
     st.session_state.last_message_html = ""
+if "user_message" not in st.session_state:
+    st.session_state.user_message = ""
 
 # -----------------------------
-# Display Messages
+# Display Static First Message
 # -----------------------------
 st.markdown("""
 <div class="chat-container">
@@ -106,7 +104,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Show last user message above the input
+# Display user's last message (if any)
 if st.session_state.last_message_html:
     st.markdown(st.session_state.last_message_html, unsafe_allow_html=True)
 
@@ -114,32 +112,28 @@ if st.session_state.last_message_html:
 # Input Form
 # -----------------------------
 with st.form(key="chat_form"):
-    user_input = st.text_input("", value="", key="user_message")
+    user_input = st.text_input("Type a message", key="user_message")
     submitted = st.form_submit_button("Send Message")
 
     if submitted and user_input.strip():
         label, score, matched_keywords = keyword_detector(user_input)
         bubble_class = "chat-bubble outgoing"
         bubble_note = ""
-        safe_input = html.escape(user_input)  # Escape user input safely
-        st.session_state.last_message_html = "..."  # your HTML chat message
-        st.session_state.user_message = ""  # 🔄 clear input
-        st.rerun()
+        safe_input = html.escape(user_input)
 
-        # Keyword flagged
+        # Keyword flag
         if label == "toxic (keyword)":
             bubble_class += " flagged"
-            bubble_note = f"""
+            bubble_note = """
             <div style='color: gray; font-style: italic; font-size: 13px; margin-top: 5px;'>
                 *This message was flagged for hate speech and was not sent.*
             </div>
             """
         else:
-            # AI model check
+            # AI Model check
             result = classifier(user_input)[0]
             label = result['label'].lower()
             score = result['score']
-
             if label in ["toxic", "hate", "offensive"] and score >= 0.85:
                 bubble_class += " flagged"
                 bubble_note = f"""
@@ -148,17 +142,17 @@ with st.form(key="chat_form"):
                 </div>
                 """
 
-        # Construct message HTML
+        # Build message HTML
         message_html = f"""
         <div class="chat-container">
             <div class="{bubble_class}">
                 <div class="name-label">You:</div>
                 {safe_input}
-                <div>{bubble_note}</div>
+                {bubble_note}
             </div>
         </div>
         """
-
-        # Save and rerun to show message above input
+        # Store and clear
         st.session_state.last_message_html = message_html
+        st.session_state.user_message = ""  # ✅ This clears the input
         st.rerun()
