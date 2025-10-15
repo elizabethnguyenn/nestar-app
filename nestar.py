@@ -193,4 +193,5 @@ if submitted and user_input.strip():
 
     # Save to session history
     st.session_state.messages.append(message_html)
+    st.session_state.user_message = ""  # Clear the input box
     st.rerun()
