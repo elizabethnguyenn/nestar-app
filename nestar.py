@@ -75,6 +75,7 @@ keyword_patterns = {
     "slut": r"\b[s5$][l1!][uü*][t+]\b",
     "whore": r"\b[wvv][h#][o0ö*][r][e3]\b",
     "gay is wrong": r"g[a@4]y\s+is\s+wrong"
+    "trans people shouldn't exist"
 }
 
 def keyword_detector(text):
