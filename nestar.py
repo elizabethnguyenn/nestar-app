@@ -181,12 +181,15 @@ if submitted and user_input.strip():
 
     # Final message
     message_html = f"""
-    <div class="{bubble_class}">
+    <div class="chat-container">
+        <div class="{bubble_class}">
         <div class="name-label">You:</div>
         {safe_input}
-        {bubble_note}
+        <div>{bubble_note}</div>
+        </div>
     </div>
-    """
+"""
+
 
     # Save to session history
     st.session_state.messages.append(message_html)
