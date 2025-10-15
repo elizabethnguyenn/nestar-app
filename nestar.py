@@ -1,21 +1,17 @@
 import streamlit as st
 from transformers import pipeline
 import re
-import html  
-import os
-os.environ['TRANSFORMERS_CACHE'] = './model_cache'
-
+import html  # Escape user input safely
 
 # -----------------------------
 # App Configuration
 # -----------------------------
 st.set_page_config(page_title="NESTAR Messaging Filter", layout="centered")
-
 st.title("NESTAR Hate Crime Messaging Detection System")
 st.caption("Microsoft Teams Simulation")
 
 # -----------------------------
-# Message Bubbles
+# Message Bubbles Styling
 # -----------------------------
 st.markdown("""
 <style>
@@ -25,7 +21,6 @@ st.markdown("""
     gap: 10px;
     margin-bottom: 20px;
 }
-
 .chat-bubble {
     padding: 10px 15px;
     border-radius: 15px;
@@ -33,22 +28,18 @@ st.markdown("""
     word-wrap: break-word;
     font-size: 16px;
 }
-
 .incoming {
     background-color: #f1f1f1;
     align-self: flex-start;
 }
-
 .outgoing {
     background-color: #e1f5fe;
     align-self: flex-end;
 }
-
 .outgoing.flagged {
     background-color: #ffebee;
     border-left: 5px solid red;
 }
-
 .name-label {
     font-weight: bold;
     font-size: 13px;
@@ -68,7 +59,7 @@ def load_model():
 classifier = load_model()
 
 # -----------------------------
-# Keyword Detector (pattern matching)
+# Keyword Detection Patterns
 # -----------------------------
 keyword_patterns = {
     "bitch": r"\b[b8][i1!|l*][t+][c(k)][h4]\b",
@@ -89,13 +80,15 @@ def keyword_detector(text):
         return None, None, []
 
 # -----------------------------
-# Session State
+# Session State Initialization
 # -----------------------------
 if "last_message_html" not in st.session_state:
     st.session_state.last_message_html = ""
+if "user_message" not in st.session_state:
+    st.session_state.user_message = ""
 
 # -----------------------------
-# Display Messages
+# Display Example Message
 # -----------------------------
 st.markdown("""
 <div class="chat-container">
@@ -106,7 +99,9 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Show last user message above the input
+# -----------------------------
+# Display Last Message Sent
+# -----------------------------
 if st.session_state.last_message_html:
     st.markdown(st.session_state.last_message_html, unsafe_allow_html=True)
 
@@ -114,16 +109,16 @@ if st.session_state.last_message_html:
 # Input Form
 # -----------------------------
 with st.form(key="chat_form"):
-    user_input = st.text_input("", value="", key="user_message")
+    user_input = st.text_input("", value=st.session_state.user_message, key="user_message")
     submitted = st.form_submit_button("Send Message")
 
     if submitted and user_input.strip():
         label, score, matched_keywords = keyword_detector(user_input)
         bubble_class = "chat-bubble outgoing"
         bubble_note = ""
-        safe_input = html.escape(user_input)  # Escape user input safely
+        safe_input = html.escape(user_input)
 
-        # Keyword flagged
+        # Check for keyword toxicity
         if label == "toxic (keyword)":
             bubble_class += " flagged"
             bubble_note = f"""
@@ -132,7 +127,7 @@ with st.form(key="chat_form"):
             </div>
             """
         else:
-            # AI model check
+            # Run AI toxicity check
             result = classifier(user_input)[0]
             label = result['label'].lower()
             score = result['score']
@@ -145,7 +140,7 @@ with st.form(key="chat_form"):
                 </div>
                 """
 
-        # Construct message HTML
+        # Final message HTML
         message_html = f"""
         <div class="chat-container">
             <div class="{bubble_class}">
@@ -156,7 +151,7 @@ with st.form(key="chat_form"):
         </div>
         """
 
-        # Save and rerun to show message above input
+        # Save message to state and rerun
         st.session_state.last_message_html = message_html
-        st.session_state["user_message"] = ""
+        st.session_state.user_message = ""  # ✅ Clear input safely
         st.rerun()
