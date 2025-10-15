@@ -1,7 +1,7 @@
 import streamlit as st
 from transformers import pipeline
 import re
-import html  # To escape user input safely
+import html  
 import os
 os.environ['TRANSFORMERS_CACHE'] = './model_cache'
 
@@ -68,7 +68,7 @@ def load_model():
 classifier = load_model()
 
 # -----------------------------
-# 🔍 Keyword Detector (pattern matching)
+# Keyword Detector (pattern matching)
 # -----------------------------
 keyword_patterns = {
     "bitch": r"\b[b8][i1!|l*][t+][c(k)][h4]\b",
